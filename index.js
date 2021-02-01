@@ -15,6 +15,13 @@ app.set('view engine', 'hbs')
 
 app.use(cors())
 
+app.get('/', (req, res) => {
+  res.render('hello', {
+    greeting: 'Halo semua',
+    userName: 'Saefulloh Maslul'
+  })
+})
+
 app.use('/product', productRouter)
 app.use((err, req, res, next) => {
   return res.status(err.statusCode || 500).json({
