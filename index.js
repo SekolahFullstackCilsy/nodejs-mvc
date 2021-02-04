@@ -14,6 +14,7 @@ app.engine('hbs', exphbs({
 app.set('view engine', 'hbs')
 
 app.use(cors())
+app.use(express.json())
 
 app.get('/', (req, res) => {
   res.render('hello', {
