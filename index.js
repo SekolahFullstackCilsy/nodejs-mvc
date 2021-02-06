@@ -3,9 +3,14 @@ const cors = require('cors')
 const exphbs = require('express-handlebars');
 
 const productRouter = require('./routers/product')
+const sequelizeInstance = require('./models/sequelize')
 
 const app = express()
 const port = 8000
+
+sequelizeInstance.authenticate().then(() => {
+  console.log('DB Ready...')
+})
 
 app.engine('hbs', exphbs({
   defaultLayout: 'main',

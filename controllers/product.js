@@ -1,10 +1,8 @@
-const ProductModel = require('../models/product')
+const { Product } = require('../models')
 
-const productModel = new ProductModel()
-
-exports.getProducts = (req, res, next) => {
+exports.getProducts = async (req, res, next) => {
   try {
-    const products = productModel.findAll()
+    const products = await Product.findAll()
     
     return res.json({
       statusCode: 200,
@@ -19,11 +17,11 @@ exports.getProducts = (req, res, next) => {
   }
 }
 
-exports.getProductById = (req, res, next) => {
+exports.getProductById = async (req, res, next) => {
   try {
     const { id } = req.params
     
-    const product = productModel.findById(id)
+    const product = await Product.findByPk(id)
 
     if (!product) {
       throw ({
@@ -47,7 +45,7 @@ exports.getProductById = (req, res, next) => {
 
 exports.addProduct = async (req, res, next) => {
   try {
-    const product = productModel.create(req.body)
+    const product = await Product.create(req.body)
 
     return res.json({
       statusCode: 200,
@@ -66,7 +64,7 @@ exports.update = async (req, res, next) => {
   try {
     const { id } = req.params
     
-    const isProductExist = productModel.findById(id)
+    const isProductExist = await Product.findByPk(id)
 
     if (!isProductExist) {
       throw ({
@@ -75,12 +73,15 @@ exports.update = async (req, res, next) => {
       })
     }
 
-    const product = productModel.update(id, req.body)
+    await Product.update(req.body, {
+      where: {
+        id: id
+      }
+    })
 
     return res.json({
       statusCode: 200,
-      message: 'Success update product',
-      data: product
+      message: 'Success update product'
     })
   } catch (error) {
     return next({
@@ -94,7 +95,7 @@ exports.deleteById = async (req, res, next) => {
   try {
     const { id } = req.params
 
-    const isProductExist = productModel.findById(id)
+    const isProductExist = await Product.findByPk(id)
 
     if (!isProductExist) {
       throw ({
@@ -103,7 +104,11 @@ exports.deleteById = async (req, res, next) => {
       })
     }
 
-    productModel.deleteById(id)
+    await Product.destroy({
+      where: {
+        id: id
+      }
+    })
 
     return res.json({
       statusCode: 200,
