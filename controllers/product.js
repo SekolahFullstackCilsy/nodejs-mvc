@@ -1,8 +1,15 @@
-const { Product } = require('../models')
+const { Product, Size } = require('../models')
 
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll()
+    const products = await Product.findAll({
+      include: [
+        {
+          model: Size,
+          as: 'sizes'
+        }
+      ]
+    })
     
     return res.json({
       statusCode: 200,
@@ -21,7 +28,14 @@ exports.getProductById = async (req, res, next) => {
   try {
     const { id } = req.params
     
-    const product = await Product.findByPk(id)
+    const product = await Product.findByPk(id, {
+      include: [
+        {
+          model: Size,
+          as: 'sizes'
+        }
+      ]
+    })
 
     if (!product) {
       throw ({
@@ -45,7 +59,14 @@ exports.getProductById = async (req, res, next) => {
 
 exports.addProduct = async (req, res, next) => {
   try {
-    const product = await Product.create(req.body)
+    const product = await Product.create(req.body, {
+      include: [
+        {
+          model: Size,
+          as: 'sizes'
+        }
+      ]
+    })
 
     return res.json({
       statusCode: 200,
